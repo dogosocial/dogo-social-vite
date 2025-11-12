@@ -64,6 +64,37 @@ export default function ChatInterface() {
     }
   }, [])
 
+  // Prevenir scroll automático cuando el input se enfoca
+  useEffect(() => {
+    const input = inputRef.current
+    if (!input) return
+
+    const preventScroll = (e: Event) => {
+      e.preventDefault()
+      // Mantener el scroll en la posición actual
+      window.scrollTo(0, 0)
+    }
+
+    const handleFocus = () => {
+      // Prevenir que el navegador haga scroll hacia el input
+      setTimeout(() => {
+        window.scrollTo(0, 0)
+        document.body.scrollTop = 0
+        document.documentElement.scrollTop = 0
+      }, 100)
+    }
+
+    input.addEventListener('focus', handleFocus)
+    window.addEventListener('scroll', preventScroll, { passive: false })
+    document.body.addEventListener('scroll', preventScroll, { passive: false })
+
+    return () => {
+      input.removeEventListener('focus', handleFocus)
+      window.removeEventListener('scroll', preventScroll)
+      document.body.removeEventListener('scroll', preventScroll)
+    }
+  }, [])
+
   const pollForResponse = async (messageId: string, maxAttempts = 30) => {
     let attempts = 0
     const pollInterval = setInterval(async () => {
@@ -211,7 +242,17 @@ export default function ChatInterface() {
   }
 
   return (
-    <div className="flex flex-col h-[100dvh] w-full max-w-2xl mx-auto text-foreground overflow-hidden">
+    <div 
+      className="flex flex-col h-[100dvh] w-full max-w-2xl mx-auto text-foreground overflow-hidden"
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        margin: 'auto',
+      }}
+    >
       {/* Header con logo - FIJO */}
       <div 
         className="relative flex justify-center flex-shrink-0 w-full bg-background/95 backdrop-blur-md z-40 border-b border-border/30" 
