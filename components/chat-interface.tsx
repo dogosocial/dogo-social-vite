@@ -181,34 +181,36 @@ export default function ChatInterface() {
 
   return (
     <div 
-      className="flex flex-col h-screen w-full max-w-2xl mx-auto text-foreground" 
+      className="relative flex flex-col h-screen w-full max-w-2xl mx-auto text-foreground" 
       style={{ 
         height: '100dvh',
         overflowX: 'hidden',
-        touchAction: 'pan-y',
       }}
     >
-      {/* Header con logo */}
-      <div className="relative flex justify-center flex-shrink-0 bg-transparent z-30" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+      {/* Header con logo - FIJO */}
+      <div 
+        className="sticky top-0 flex justify-center flex-shrink-0 bg-background/95 backdrop-blur-md z-40 border-b border-border/30" 
+        style={{ paddingTop: 'env(safe-area-inset-top)' }}
+      >
         {/* GradualBlur como fondo */}
-        <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 pointer-events-none opacity-50">
           <GradualBlur
             position="bottom"
-            height="4rem"
+            height="3rem"
             strength={2}
             divCount={5}
             curve="bezier"
             exponential={true}
-            opacity={0.4}
+            opacity={0.3}
           />
         </div>
 
         {/* Logo */}
-        <div className="relative w-14 sm:w-16 md:w-20 pt-2 sm:pt-3 md:pt-4 z-10">
+        <div className="relative py-2 sm:py-2.5 md:py-3 z-10">
           <img
             src="/images/design-mode/dogo-social-logo.webp"
             alt="Dogo Social"
-            className="w-14 sm:w-16 md:w-20 aspect-square object-contain"
+            className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 object-contain"
           />
         </div>
       </div>
@@ -221,12 +223,13 @@ export default function ChatInterface() {
           WebkitOverflowScrolling: 'touch',
           overflowX: 'hidden',
           touchAction: 'pan-y',
+          paddingBottom: 'calc(80px + env(safe-area-inset-bottom))', // Espacio para el input fijo
         }}
       >
-        <div className="p-2 sm:p-3 md:p-6 space-y-2 sm:space-y-3 md:space-y-6 flex flex-col">
+        <div className="px-3 py-4 sm:px-4 sm:py-5 md:px-6 md:py-6 space-y-3 sm:space-y-4 md:space-y-6 flex flex-col">
           {messages.length === 0 ? (
-            <div className="flex flex-col items-center justify-center min-h-[calc(100vh-16rem)] gap-3 sm:gap-4">
-              <p className="text-muted-foreground text-center text-xs sm:text-sm md:text-base px-3 sm:px-4">
+            <div className="flex flex-col items-center justify-center min-h-[50vh] gap-3 sm:gap-4">
+              <p className="text-muted-foreground text-center text-sm sm:text-base md:text-lg px-4 sm:px-6">
                 ¡Hola! Soy DogoAI, tu vet ai de confianza. ¿Cómo puedo ayudarte?
               </p>
             </div>
@@ -243,16 +246,16 @@ export default function ChatInterface() {
                   <ChatMessage key={message.id} message={message} />
                 ),
               )}
-              <div ref={messagesEndRef} />
+              <div ref={messagesEndRef} className="h-2" />
             </>
           )}
         </div>
       </div>
 
-      {/* Input form en la parte inferior */}
+      {/* Input form en la parte inferior - FIJO */}
       <div 
-        className="flex-shrink-0 p-2 sm:p-3 md:p-6 backdrop-blur-md bg-background/80 border-t border-border/30 z-30" 
-        style={{ paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))' }}
+        className="fixed bottom-0 left-0 right-0 flex-shrink-0 px-3 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 backdrop-blur-md bg-background/95 border-t border-border/30 z-40 max-w-2xl mx-auto" 
+        style={{ paddingBottom: 'calc(0.75rem + env(safe-area-inset-bottom))' }}
       >
         <form onSubmit={sendMessage} className="flex gap-2">
           <input
