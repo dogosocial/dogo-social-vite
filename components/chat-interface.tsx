@@ -184,12 +184,12 @@ export default function ChatInterface() {
       className="relative flex flex-col h-screen w-full max-w-2xl mx-auto text-foreground" 
       style={{ 
         height: '100dvh',
-        overflowX: 'hidden',
+        overflow: 'hidden',
       }}
     >
       {/* Header con logo - FIJO */}
       <div 
-        className="sticky top-0 flex justify-center flex-shrink-0 bg-background/95 backdrop-blur-md z-40 border-b border-border/30" 
+        className="fixed top-0 left-0 right-0 flex justify-center flex-shrink-0 bg-background/95 backdrop-blur-md z-40 border-b border-border/30 max-w-2xl mx-auto" 
         style={{ paddingTop: 'env(safe-area-inset-top)' }}
       >
         {/* GradualBlur como fondo */}
@@ -218,12 +218,12 @@ export default function ChatInterface() {
       {/* Messages Container - El contenedor principal de scroll */}
       <div 
         ref={messagesContainerRef} 
-        className="flex-1 overflow-y-auto overscroll-contain" 
+        className="flex-1 overflow-y-auto overflow-x-hidden overscroll-contain" 
         style={{ 
           WebkitOverflowScrolling: 'touch',
-          overflowX: 'hidden',
           touchAction: 'pan-y',
-          paddingBottom: 'calc(80px + env(safe-area-inset-bottom))', // Espacio para el input fijo
+          marginTop: 'calc(56px + env(safe-area-inset-top))', // Espacio para el header fijo
+          marginBottom: 'calc(80px + env(safe-area-inset-bottom))', // Espacio para el input fijo
         }}
       >
         <div className="px-3 py-4 sm:px-4 sm:py-5 md:px-6 md:py-6 space-y-3 sm:space-y-4 md:space-y-6 flex flex-col">
@@ -268,7 +268,7 @@ export default function ChatInterface() {
               fontSize: '16px',
               touchAction: 'manipulation',
             }}
-            className="flex-1 px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-4 bg-background/60 backdrop-blur-sm border border-border/50 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent disabled:opacity-50 transition-all min-h-[44px]"
+            className="flex-1 px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-4 bg-background/60 backdrop-blur-sm border border-border/50 rounded-full focus:outline-none disabled:opacity-50 min-h-[44px]"
           />
           <button
             type="submit"
