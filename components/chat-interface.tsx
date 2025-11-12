@@ -179,26 +179,12 @@ export default function ChatInterface() {
   }
 
   return (
-    <div 
-      className="relative flex flex-col w-full max-w-2xl mx-auto text-foreground" 
-      style={{ 
-        height: '100dvh',
-        overflow: 'hidden',
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        margin: '0 auto',
-      }}
-    >
+    <div className="flex flex-col h-[100dvh] w-full max-w-2xl mx-auto text-foreground overflow-hidden">
       {/* Header con logo - FIJO */}
       <div 
         className="relative flex justify-center flex-shrink-0 w-full bg-background/95 backdrop-blur-md z-40 border-b border-border/30" 
         style={{ 
           paddingTop: 'max(0.5rem, env(safe-area-inset-top))',
-          position: 'sticky',
-          top: 0,
         }}
       >
         {/* GradualBlur como fondo */}
@@ -226,10 +212,10 @@ export default function ChatInterface() {
 
       {/* Messages Container - El contenedor principal de scroll */}
       <div 
-        className="flex-1 overflow-y-auto overflow-x-hidden overscroll-contain hide-scrollbar px-3 sm:px-4 md:px-6 py-4 sm:py-5 md:py-6" 
+        className="flex-1 overflow-y-auto overflow-x-hidden hide-scrollbar px-3 sm:px-4 md:px-6 py-4 sm:py-5 md:py-6" 
         style={{ 
           WebkitOverflowScrolling: 'touch',
-          touchAction: 'pan-y',
+          overscrollBehavior: 'contain',
         }}
       >
         <div className="space-y-3 sm:space-y-4 md:space-y-10 flex flex-col">
@@ -263,8 +249,6 @@ export default function ChatInterface() {
         className="flex-shrink-0 w-full px-3 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 backdrop-blur-md bg-background/95 border-t border-border/30 z-40" 
         style={{ 
           paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))',
-          position: 'sticky',
-          bottom: 0,
         }}
       >
         <form onSubmit={sendMessage} className="flex gap-2">
