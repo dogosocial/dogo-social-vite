@@ -20,14 +20,14 @@ export default function ChatMessage({ message }: ChatMessageProps) {
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
       <div
-        className={`max-w-xs md:max-w-md px-4 py-2 md:px-6 md:py-3 ${
+        className={`max-w-[85%] sm:max-w-xs md:max-w-md px-3 py-2 sm:px-4 sm:py-2 md:px-6 md:py-3 ${
           isUser ? "text-right text-primary" : "text-left text-foreground"
         }`}
       >
         {message.loading ? (
           <div className="flex items-center gap-2">
             <Loader className="w-4 h-4 animate-spin" />
-            <span>Generando respuesta...</span>
+            <span className="text-xs sm:text-sm">Generando respuesta...</span>
           </div>
         ) : (
           <BlurText
@@ -35,7 +35,7 @@ export default function ChatMessage({ message }: ChatMessageProps) {
             delay={50}
             direction="top"
             animateBy="words"
-            className={`text-sm md:text-base ${isUser ? "text-primary" : "text-foreground"}`}
+            className={`text-xs sm:text-sm md:text-base leading-relaxed ${isUser ? "text-primary" : "text-foreground"}`}
           />
         )}
       </div>

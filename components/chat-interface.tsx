@@ -196,11 +196,11 @@ export default function ChatInterface() {
         </div>
 
         {/* Logo sobre el GradualBlur */}
-        <div className="relative w-16 sm:w-20 md:w-24 pt-2 sm:pt-3 md:pt-4 z-10">
+        <div className="relative w-14 sm:w-16 md:w-20 pt-2 sm:pt-3 md:pt-4 z-10">
           <img
             src="/images/design-mode/dogo-social-logo.webp"
             alt="Dogo Social"
-            className="w-16 sm:w-20 md:w-24 aspect-square object-contain"
+            className="w-14 sm:w-16 md:w-20 aspect-square object-contain"
           />
         </div>
       </div>
@@ -208,18 +208,18 @@ export default function ChatInterface() {
       {/* Messages Container */}
       <div className="flex-1 overflow-hidden relative bg-transparent z-10">
         <div ref={messagesContainerRef} className="h-full overflow-y-auto bg-transparent">
-          <div className="p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4 md:space-y-6 flex flex-col">
+          <div className="p-2 sm:p-3 md:p-6 space-y-2 sm:space-y-3 md:space-y-6 flex flex-col">
             {messages.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-full gap-4">
-                <p className="text-muted-foreground text-center text-sm sm:text-base px-4">
-                  ¡Hola! Soy Dogo Social, tu asistente. ¿Cómo puedo ayudarte?
+              <div className="flex flex-col items-center justify-center h-full gap-3 sm:gap-4">
+                <p className="text-muted-foreground text-center text-xs sm:text-sm md:text-base px-3 sm:px-4">
+                  ¡Hola! Soy DogoAI, tu vet ai de confianza. ¿Cómo puedo ayudarte?
                 </p>
               </div>
             ) : (
               <>
                 {messages.map((message) =>
                   message.loading ? (
-                    <div key={message.id} className="flex gap-2 sm:gap-3 animate-fade-in">
+                    <div key={message.id} className="flex gap-2 animate-fade-in">
                       <div className="flex-1">
                         <ThinkingLoader />
                       </div>
@@ -235,22 +235,22 @@ export default function ChatInterface() {
         </div>
       </div>
 
-      <div className="p-3 sm:p-4 md:p-6 backdrop-blur-md bg-background/80 flex-shrink-0 border-t border-border/30">
-        <form onSubmit={sendMessage} className="flex gap-2 sm:gap-3">
+      <div className="p-2 sm:p-3 md:p-6 backdrop-blur-md bg-background/80 flex-shrink-0 border-t border-border/30 safe-area-bottom">
+        <form onSubmit={sendMessage} className="flex gap-2">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Escribe tu mensaje..."
             disabled={loading}
-            className="flex-1 px-3 sm:px-4 md:px-5 py-2 sm:py-3 md:py-4 bg-background/60 backdrop-blur-sm border border-border/50 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent disabled:opacity-50 text-sm md:text-base transition-all"
+            className="flex-1 px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-4 bg-background/60 backdrop-blur-sm border border-border/50 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent disabled:opacity-50 text-xs sm:text-sm md:text-base transition-all min-h-[44px] touch-manipulation"
           />
           <button
             type="submit"
             disabled={loading || !input.trim()}
-            className="px-3 sm:px-4 md:px-5 py-2 sm:py-3 md:py-4 bg-primary text-primary-foreground rounded-full hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2 shadow-lg hover:shadow-xl flex-shrink-0"
+            className="px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-4 bg-primary text-primary-foreground rounded-full hover:bg-primary/90 active:bg-primary/80 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-xl active:shadow-md flex-shrink-0 min-w-[44px] min-h-[44px] touch-manipulation"
           >
-            <Send className="w-4 h-4" />
+            <Send className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
         </form>
       </div>
