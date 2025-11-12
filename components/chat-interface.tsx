@@ -23,7 +23,6 @@ export default function ChatInterface() {
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const messagesContainerRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -189,7 +188,7 @@ export default function ChatInterface() {
     >
       {/* Header con logo - FIJO */}
       <div 
-        className="fixed top-0 left-0 right-0 flex justify-center flex-shrink-0 bg-background/95 backdrop-blur-md z-40 border-b border-border/30 max-w-2xl mx-auto" 
+        className="relative flex justify-center flex-shrink-0 w-full bg-background/95 backdrop-blur-md z-40 border-b border-border/30" 
         style={{ paddingTop: 'env(safe-area-inset-top)' }}
       >
         {/* GradualBlur como fondo */}
@@ -217,16 +216,13 @@ export default function ChatInterface() {
 
       {/* Messages Container - El contenedor principal de scroll */}
       <div 
-        ref={messagesContainerRef} 
-        className="flex-1 overflow-y-auto overflow-x-hidden overscroll-contain" 
+        className="flex-1 overflow-y-auto overflow-x-hidden overscroll-contain hide-scrollbar px-3 sm:px-4 md:px-6 py-4 sm:py-5 md:py-6" 
         style={{ 
           WebkitOverflowScrolling: 'touch',
           touchAction: 'pan-y',
-          marginTop: 'calc(56px + env(safe-area-inset-top))', // Espacio para el header fijo
-          marginBottom: 'calc(80px + env(safe-area-inset-bottom))', // Espacio para el input fijo
         }}
       >
-        <div className="px-3 py-4 sm:px-4 sm:py-5 md:px-6 md:py-6 space-y-3 sm:space-y-4 md:space-y-6 flex flex-col">
+        <div className="space-y-3 sm:space-y-4 md:space-y-10 flex flex-col">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center min-h-[50vh] gap-3 sm:gap-4">
               <p className="text-muted-foreground text-center text-sm sm:text-base md:text-lg px-4 sm:px-6">
@@ -254,7 +250,7 @@ export default function ChatInterface() {
 
       {/* Input form en la parte inferior - FIJO */}
       <div 
-        className="fixed bottom-0 left-0 right-0 flex-shrink-0 px-3 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 backdrop-blur-md bg-background/95 border-t border-border/30 z-40 max-w-2xl mx-auto" 
+        className="flex-shrink-0 w-full px-3 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 backdrop-blur-md bg-background/95 border-t border-border/30 z-40" 
         style={{ paddingBottom: 'calc(0.75rem + env(safe-area-inset-bottom))' }}
       >
         <form onSubmit={sendMessage} className="flex gap-2">

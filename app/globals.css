@@ -119,54 +119,13 @@
   * {
     @apply border-border outline-ring/50;
   }
-  
-  html {
-    height: 100vh;
-    height: 100dvh; /* Dynamic viewport height for mobile */
-    overflow: hidden;
-    overflow-x: hidden;
-    position: fixed;
-    width: 100%;
-    /* Prevent iOS Safari bounce */
-    overscroll-behavior: none;
-    -webkit-overflow-scrolling: touch;
-    /* Prevent zoom */
-    touch-action: pan-y;
-  }
-  
   body {
     @apply bg-background text-foreground;
-    height: 100vh;
-    height: 100dvh;
-    overflow: hidden;
-    overflow-x: hidden;
-    margin: 0;
-    padding: 0;
-    position: fixed;
-    width: 100%;
-    /* iOS specific fixes */
-    -webkit-font-smoothing: antialiased;
-    -webkit-tap-highlight-color: transparent;
-    overscroll-behavior: none;
-    /* Prevent zoom */
-    touch-action: pan-y;
   }
 
-  /* Hide scrollbar for html and body */
-  html::-webkit-scrollbar,
-  body::-webkit-scrollbar {
-    display: none;
-  }
-  
-  html,
-  body {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
-  }
-
-  /* Custom scrollbar styling for content areas - modern, minimal appearance */
+  /* Custom scrollbar styling for modern, minimal appearance */
   ::-webkit-scrollbar {
-    width: 4px;
+    width: 6px;
   }
 
   ::-webkit-scrollbar-track {
@@ -174,48 +133,21 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.15);
-    border-radius: 2px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
     transition: background 0.3s ease;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.25);
+    background: rgba(0, 0, 0, 0.35);
   }
 
   .dark ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.2);
   }
 
   .dark ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.25);
-  }
-
-  /* iOS Safari specific fixes */
-  input,
-  textarea,
-  select {
-    font-size: 16px !important; /* Prevent zoom on focus in iOS */
-    -webkit-appearance: none;
-    appearance: none;
-    /* Prevent zoom on double tap */
-    touch-action: manipulation;
-  }
-
-  /* Prevent pull-to-refresh on iOS */
-  body {
-    overscroll-behavior-y: contain;
-  }
-
-  /* Prevent horizontal scroll globally */
-  * {
-    overflow-x: hidden;
-  }
-
-  /* Disable zoom gestures */
-  * {
-    -ms-touch-action: manipulation;
-    touch-action: manipulation;
+    background: rgba(255, 255, 255, 0.35);
   }
 
 }
