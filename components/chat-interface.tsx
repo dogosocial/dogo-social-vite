@@ -34,16 +34,17 @@ export default function ChatInterface() {
     scrollToBottom()
   }, [messages])
 
-  // Detectar cuando el teclado se abre/cierra
+  // Detectar cuando el teclado se abre/cierra y ajustar posición
   useEffect(() => {
     const handleResize = () => {
-      // En móviles, cuando el teclado se abre, la altura del viewport disminuye
-      const viewportHeight = window.visualViewport?.height || window.innerHeight
-      const windowHeight = window.innerHeight
-      
-      // Si la diferencia es significativa, el teclado está abierto
-      const keyboardVisible = windowHeight - viewportHeight > 100
-      setIsKeyboardOpen(keyboardVisible)
+      if (window.visualViewport) {
+        const viewportHeight = window.visualViewport.height
+        const windowHeight = window.innerHeight
+        
+        // Si la diferencia es significativa, el teclado está abierto
+        const keyboardVisible = windowHeight - viewportHeight > 100
+        setIsKeyboardOpen(keyboardVisible)
+      }
     }
 
     // Escuchar cambios en el visual viewport (mejor para detectar teclado)
@@ -64,36 +65,31 @@ export default function ChatInterface() {
     }
   }, [])
 
-  // Prevenir scroll automático cuando el input se enfoca
+  // Ajustar posición del contenedor cuando cambia el visualViewport
   useEffect(() => {
-    const input = inputRef.current
-    if (!input) return
-
-    const preventScroll = (e: Event) => {
-      e.preventDefault()
-      // Mantener el scroll en la posición actual
-      window.scrollTo(0, 0)
+    const handleViewportChange = () => {
+      if (window.visualViewport && isKeyboardOpen) {
+        const offsetY = window.visualViewport.offsetTop
+        document.documentElement.style.setProperty('--viewport-offset', `${offsetY}px`)
+      } else {
+        document.documentElement.style.setProperty('--viewport-offset', '0px')
+      }
     }
 
-    const handleFocus = () => {
-      // Prevenir que el navegador haga scroll hacia el input
-      setTimeout(() => {
-        window.scrollTo(0, 0)
-        document.body.scrollTop = 0
-        document.documentElement.scrollTop = 0
-      }, 100)
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', handleViewportChange)
+      window.visualViewport.addEventListener('scroll', handleViewportChange)
     }
 
-    input.addEventListener('focus', handleFocus)
-    window.addEventListener('scroll', preventScroll, { passive: false })
-    document.body.addEventListener('scroll', preventScroll, { passive: false })
+    handleViewportChange()
 
     return () => {
-      input.removeEventListener('focus', handleFocus)
-      window.removeEventListener('scroll', preventScroll)
-      document.body.removeEventListener('scroll', preventScroll)
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', handleViewportChange)
+        window.visualViewport.removeEventListener('scroll', handleViewportChange)
+      }
     }
-  }, [])
+  }, [isKeyboardOpen])
 
   const pollForResponse = async (messageId: string, maxAttempts = 30) => {
     let attempts = 0
@@ -243,13 +239,15 @@ export default function ChatInterface() {
 
   return (
     <div 
-      className="flex flex-col h-[100dvh] w-full max-w-2xl mx-auto text-foreground overflow-hidden"
+      className="flex flex-col w-full max-w-2xl mx-auto text-foreground overflow-hidden"
       style={{
         position: 'fixed',
-        top: 0,
+        top: 'var(--viewport-offset, 0px)',
         left: 0,
         right: 0,
-        bottom: 0,
+        height: isKeyboardOpen && window.visualViewport 
+          ? `${window.visualViewport.height}px` 
+          : '100dvh',
         margin: 'auto',
       }}
     >
@@ -322,14 +320,6 @@ export default function ChatInterface() {
         className="flex-shrink-0 w-full px-3 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 backdrop-blur-md bg-background/95 border-t border-border/30" 
         style={{ 
           paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))',
-          position: isKeyboardOpen ? 'fixed' : 'relative',
-          bottom: isKeyboardOpen ? '0' : 'auto',
-          left: isKeyboardOpen ? '0' : 'auto',
-          right: isKeyboardOpen ? '0' : 'auto',
-          zIndex: 50,
-          maxWidth: isKeyboardOpen ? '672px' : '100%',
-          marginLeft: isKeyboardOpen ? 'auto' : '0',
-          marginRight: isKeyboardOpen ? 'auto' : '0',
         }}
       >
         <form onSubmit={sendMessage} className="flex gap-2">
