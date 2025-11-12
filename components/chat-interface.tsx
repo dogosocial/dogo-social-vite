@@ -180,9 +180,10 @@ export default function ChatInterface() {
   }
 
   return (
-    <div className="flex flex-col h-screen max-w-2xl mx-auto text-foreground w-full">
-      <div className="sticky top-0 z-30 flex justify-center flex-shrink-0 relative bg-transparent overflow-visible">
-        {/* GradualBlur como fondo de toda la sección */}
+    <div className="flex flex-col h-screen w-full max-w-2xl mx-auto text-foreground">
+      {/* Header con logo */}
+      <div className="relative flex justify-center flex-shrink-0 bg-transparent z-30">
+        {/* GradualBlur como fondo */}
         <div className="absolute inset-0 pointer-events-none">
           <GradualBlur
             position="bottom"
@@ -195,7 +196,7 @@ export default function ChatInterface() {
           />
         </div>
 
-        {/* Logo sobre el GradualBlur */}
+        {/* Logo */}
         <div className="relative w-14 sm:w-16 md:w-20 pt-2 sm:pt-3 md:pt-4 z-10">
           <img
             src="/images/design-mode/dogo-social-logo.webp"
@@ -205,37 +206,36 @@ export default function ChatInterface() {
         </div>
       </div>
 
-      {/* Messages Container */}
-      <div className="flex-1 overflow-hidden relative bg-transparent z-10">
-        <div ref={messagesContainerRef} className="h-full overflow-y-auto bg-transparent">
-          <div className="p-2 sm:p-3 md:p-6 space-y-2 sm:space-y-3 md:space-y-6 flex flex-col">
-            {messages.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-full gap-3 sm:gap-4">
-                <p className="text-muted-foreground text-center text-xs sm:text-sm md:text-base px-3 sm:px-4">
-                  ¡Hola! Soy DogoAI, tu vet ai de confianza. ¿Cómo puedo ayudarte?
-                </p>
-              </div>
-            ) : (
-              <>
-                {messages.map((message) =>
-                  message.loading ? (
-                    <div key={message.id} className="flex gap-2 animate-fade-in">
-                      <div className="flex-1">
-                        <ThinkingLoader />
-                      </div>
+      {/* Messages Container - El contenedor principal de scroll */}
+      <div ref={messagesContainerRef} className="flex-1 overflow-y-auto">
+        <div className="p-2 sm:p-3 md:p-6 space-y-2 sm:space-y-3 md:space-y-6 flex flex-col">
+          {messages.length === 0 ? (
+            <div className="flex flex-col items-center justify-center min-h-[calc(100vh-16rem)] gap-3 sm:gap-4">
+              <p className="text-muted-foreground text-center text-xs sm:text-sm md:text-base px-3 sm:px-4">
+                ¡Hola! Soy DogoAI, tu vet ai de confianza. ¿Cómo puedo ayudarte?
+              </p>
+            </div>
+          ) : (
+            <>
+              {messages.map((message) =>
+                message.loading ? (
+                  <div key={message.id} className="flex gap-2 animate-fade-in">
+                    <div className="flex-1">
+                      <ThinkingLoader />
                     </div>
-                  ) : (
-                    <ChatMessage key={message.id} message={message} />
-                  ),
-                )}
-                <div ref={messagesEndRef} />
-              </>
-            )}
-          </div>
+                  </div>
+                ) : (
+                  <ChatMessage key={message.id} message={message} />
+                ),
+              )}
+              <div ref={messagesEndRef} />
+            </>
+          )}
         </div>
       </div>
 
-      <div className="p-2 sm:p-3 md:p-6 backdrop-blur-md bg-background/80 flex-shrink-0 border-t border-border/30 safe-area-bottom">
+      {/* Input form en la parte inferior */}
+      <div className="flex-shrink-0 p-2 sm:p-3 md:p-6 backdrop-blur-md bg-background/80 border-t border-border/30 z-30">
         <form onSubmit={sendMessage} className="flex gap-2">
           <input
             type="text"

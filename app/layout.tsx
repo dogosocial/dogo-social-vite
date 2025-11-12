@@ -47,8 +47,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className={`font-sans antialiased`}>
+    <html lang="en" className="overflow-hidden">
+      <body className={`font-sans antialiased overflow-hidden`}>
         {children}
         <Analytics />
       </body>
