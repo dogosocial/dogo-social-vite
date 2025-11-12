@@ -32,55 +32,6 @@ export default function ChatInterface() {
     scrollToBottom()
   }, [messages])
 
-  // Ajustar la altura del contenedor para manejar teclados móviles/barras
-  useEffect(() => {
-    let rafId: number | null = null
-    let focusOutTimeout: ReturnType<typeof setTimeout> | null = null
-
-    const setViewportHeight = () => {
-      const viewport = window.visualViewport
-      if (viewport) {
-        const visualHeight = Math.round(viewport.height + viewport.offsetTop)
-        const fallbackHeight = window.innerHeight
-        const height = Math.min(fallbackHeight, visualHeight)
-        document.documentElement.style.setProperty("--viewport-height", `${height}px`)
-      } else {
-        document.documentElement.style.setProperty("--viewport-height", `${window.innerHeight}px`)
-      }
-    }
-
-    const scheduleHeightUpdate = () => {
-      if (rafId) cancelAnimationFrame(rafId)
-      rafId = requestAnimationFrame(setViewportHeight)
-    }
-
-    const handleFocusOut = () => {
-      if (focusOutTimeout) clearTimeout(focusOutTimeout)
-      focusOutTimeout = setTimeout(setViewportHeight, 150)
-    }
-
-    setViewportHeight()
-
-    const viewport = window.visualViewport
-    viewport?.addEventListener("resize", scheduleHeightUpdate)
-    viewport?.addEventListener("scroll", scheduleHeightUpdate)
-    window.addEventListener("resize", scheduleHeightUpdate)
-    window.addEventListener("orientationchange", scheduleHeightUpdate)
-    window.addEventListener("focusin", scheduleHeightUpdate)
-    window.addEventListener("focusout", handleFocusOut)
-
-    return () => {
-      if (rafId) cancelAnimationFrame(rafId)
-      if (focusOutTimeout) clearTimeout(focusOutTimeout)
-      viewport?.removeEventListener("resize", scheduleHeightUpdate)
-      viewport?.removeEventListener("scroll", scheduleHeightUpdate)
-      window.removeEventListener("resize", scheduleHeightUpdate)
-      window.removeEventListener("orientationchange", scheduleHeightUpdate)
-      window.removeEventListener("focusin", scheduleHeightUpdate)
-      window.removeEventListener("focusout", handleFocusOut)
-    }
-  }, [])
-
   const pollForResponse = async (messageId: string, maxAttempts = 30) => {
     let attempts = 0
     const pollInterval = setInterval(async () => {
@@ -228,15 +179,12 @@ export default function ChatInterface() {
   }
 
   return (
-    <div
-      className="fixed left-0 right-0 top-0 mx-auto flex w-full max-w-2xl flex-col overflow-hidden text-foreground"
-      style={{ height: "var(--viewport-height, 100dvh)" }}
-    >
+    <div className="flex flex-col h-[100dvh] w-full max-w-2xl mx-auto text-foreground overflow-hidden">
       {/* Header con logo - FIJO */}
-      <div
-        className="relative z-40 flex w-full flex-shrink-0 justify-center border-b border-border/30 bg-background/95 backdrop-blur-md"
-        style={{
-          paddingTop: "max(0.5rem, env(safe-area-inset-top))",
+      <div 
+        className="relative flex justify-center flex-shrink-0 w-full bg-background/95 backdrop-blur-md z-40 border-b border-border/30" 
+        style={{ 
+          paddingTop: 'max(0.5rem, env(safe-area-inset-top))',
         }}
       >
         {/* GradualBlur como fondo */}
@@ -263,14 +211,14 @@ export default function ChatInterface() {
       </div>
 
       {/* Messages Container - El contenedor principal de scroll */}
-      <div
-        className="hide-scrollbar flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto px-3 py-4 sm:px-4 sm:py-5 md:px-6 md:py-6"
-        style={{
-          WebkitOverflowScrolling: "touch",
-          overscrollBehavior: "contain",
+      <div 
+        className="flex-1 overflow-y-auto overflow-x-hidden hide-scrollbar px-3 sm:px-4 md:px-6 py-4 sm:py-5 md:py-6" 
+        style={{ 
+          WebkitOverflowScrolling: 'touch',
+          overscrollBehavior: 'contain',
         }}
       >
-        <div className="flex min-h-0 flex-1 flex-col space-y-3 sm:space-y-4 md:space-y-10">
+        <div className="space-y-3 sm:space-y-4 md:space-y-10 flex flex-col">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center min-h-[50vh] gap-3 sm:gap-4">
               <p className="text-muted-foreground text-center text-sm sm:text-base md:text-lg px-4 sm:px-6">
@@ -297,10 +245,10 @@ export default function ChatInterface() {
       </div>
 
       {/* Input form en la parte inferior - FIJO */}
-      <div
-        className="w-full flex-shrink-0 border-t border-border/30 bg-background/95 px-3 py-3 backdrop-blur-md sm:px-4 sm:py-3 md:px-6 md:py-4"
-        style={{
-          paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))",
+      <div 
+        className="flex-shrink-0 w-full px-3 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 backdrop-blur-md bg-background/95 border-t border-border/30 z-40" 
+        style={{ 
+          paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))',
         }}
       >
         <form onSubmit={sendMessage} className="flex gap-2">
