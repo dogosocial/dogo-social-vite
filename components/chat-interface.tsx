@@ -22,9 +22,7 @@ export default function ChatInterface() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
-  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -34,62 +32,24 @@ export default function ChatInterface() {
     scrollToBottom()
   }, [messages])
 
-  // Detectar cuando el teclado se abre/cierra y ajustar posición
+  // Ajustar la altura del contenedor según el visualViewport
   useEffect(() => {
-    const handleResize = () => {
+    const setViewportHeight = () => {
       if (window.visualViewport) {
-        const viewportHeight = window.visualViewport.height
-        const windowHeight = window.innerHeight
-        
-        // Si la diferencia es significativa, el teclado está abierto
-        const keyboardVisible = windowHeight - viewportHeight > 100
-        setIsKeyboardOpen(keyboardVisible)
+        document.documentElement.style.setProperty(
+          '--viewport-height',
+          `${window.visualViewport.height}px`
+        )
       }
     }
 
-    // Escuchar cambios en el visual viewport (mejor para detectar teclado)
+    setViewportHeight()
+
     if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', handleResize)
-      window.visualViewport.addEventListener('scroll', handleResize)
-    } else {
-      window.addEventListener('resize', handleResize)
-    }
-
-    return () => {
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', handleResize)
-        window.visualViewport.removeEventListener('scroll', handleResize)
-      } else {
-        window.removeEventListener('resize', handleResize)
-      }
+      window.visualViewport.addEventListener('resize', setViewportHeight)
+      return () => window.visualViewport.removeEventListener('resize', setViewportHeight)
     }
   }, [])
-
-  // Ajustar posición del contenedor cuando cambia el visualViewport
-  useEffect(() => {
-    const handleViewportChange = () => {
-      if (window.visualViewport && isKeyboardOpen) {
-        const offsetY = window.visualViewport.offsetTop
-        document.documentElement.style.setProperty('--viewport-offset', `${offsetY}px`)
-      } else {
-        document.documentElement.style.setProperty('--viewport-offset', '0px')
-      }
-    }
-
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', handleViewportChange)
-      window.visualViewport.addEventListener('scroll', handleViewportChange)
-    }
-
-    handleViewportChange()
-
-    return () => {
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', handleViewportChange)
-        window.visualViewport.removeEventListener('scroll', handleViewportChange)
-      }
-    }
-  }, [isKeyboardOpen])
 
   const pollForResponse = async (messageId: string, maxAttempts = 30) => {
     let attempts = 0
@@ -239,16 +199,9 @@ export default function ChatInterface() {
 
   return (
     <div 
-      className="flex flex-col w-full max-w-2xl mx-auto text-foreground overflow-hidden"
+      className="flex flex-col h-[100dvh] w-full max-w-2xl mx-auto text-foreground overflow-hidden"
       style={{
-        position: 'fixed',
-        top: 'var(--viewport-offset, 0px)',
-        left: 0,
-        right: 0,
-        height: isKeyboardOpen && window.visualViewport 
-          ? `${window.visualViewport.height}px` 
-          : '100dvh',
-        margin: 'auto',
+        height: 'var(--viewport-height, 100dvh)',
       }}
     >
       {/* Header con logo - FIJO */}
@@ -324,7 +277,6 @@ export default function ChatInterface() {
       >
         <form onSubmit={sendMessage} className="flex gap-2">
           <input
-            ref={inputRef}
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
