@@ -34,29 +34,50 @@ export default function ChatInterface() {
 
   // Ajustar la altura del contenedor para manejar teclados móviles/barras
   useEffect(() => {
+    let rafId: number | null = null
+    let focusOutTimeout: ReturnType<typeof setTimeout> | null = null
+
     const setViewportHeight = () => {
       const viewport = window.visualViewport
-
       if (viewport) {
-        // offsetTop compensa el movimiento del viewport cuando aparece el teclado
-        const dynamicHeight = viewport.height + viewport.offsetTop
-        document.documentElement.style.setProperty("--viewport-height", `${dynamicHeight}px`)
+        const visualHeight = Math.round(viewport.height + viewport.offsetTop)
+        const fallbackHeight = window.innerHeight
+        const height = Math.min(fallbackHeight, visualHeight)
+        document.documentElement.style.setProperty("--viewport-height", `${height}px`)
       } else {
         document.documentElement.style.setProperty("--viewport-height", `${window.innerHeight}px`)
       }
     }
 
+    const scheduleHeightUpdate = () => {
+      if (rafId) cancelAnimationFrame(rafId)
+      rafId = requestAnimationFrame(setViewportHeight)
+    }
+
+    const handleFocusOut = () => {
+      if (focusOutTimeout) clearTimeout(focusOutTimeout)
+      focusOutTimeout = setTimeout(setViewportHeight, 150)
+    }
+
     setViewportHeight()
 
     const viewport = window.visualViewport
-    viewport?.addEventListener("resize", setViewportHeight)
-    viewport?.addEventListener("scroll", setViewportHeight)
-    window.addEventListener("resize", setViewportHeight)
+    viewport?.addEventListener("resize", scheduleHeightUpdate)
+    viewport?.addEventListener("scroll", scheduleHeightUpdate)
+    window.addEventListener("resize", scheduleHeightUpdate)
+    window.addEventListener("orientationchange", scheduleHeightUpdate)
+    window.addEventListener("focusin", scheduleHeightUpdate)
+    window.addEventListener("focusout", handleFocusOut)
 
     return () => {
-      viewport?.removeEventListener("resize", setViewportHeight)
-      viewport?.removeEventListener("scroll", setViewportHeight)
-      window.removeEventListener("resize", setViewportHeight)
+      if (rafId) cancelAnimationFrame(rafId)
+      if (focusOutTimeout) clearTimeout(focusOutTimeout)
+      viewport?.removeEventListener("resize", scheduleHeightUpdate)
+      viewport?.removeEventListener("scroll", scheduleHeightUpdate)
+      window.removeEventListener("resize", scheduleHeightUpdate)
+      window.removeEventListener("orientationchange", scheduleHeightUpdate)
+      window.removeEventListener("focusin", scheduleHeightUpdate)
+      window.removeEventListener("focusout", handleFocusOut)
     }
   }, [])
 
@@ -208,7 +229,7 @@ export default function ChatInterface() {
 
   return (
     <div
-      className="fixed inset-0 mx-auto flex w-full max-w-2xl flex-col overflow-hidden text-foreground"
+      className="fixed left-0 right-0 top-0 mx-auto flex w-full max-w-2xl flex-col overflow-hidden text-foreground"
       style={{ height: "var(--viewport-height, 100dvh)" }}
     >
       {/* Header con logo - FIJO */}
