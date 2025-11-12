@@ -124,6 +124,14 @@
     height: 100vh;
     height: 100dvh; /* Dynamic viewport height for mobile */
     overflow: hidden;
+    overflow-x: hidden;
+    position: fixed;
+    width: 100%;
+    /* Prevent iOS Safari bounce */
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+    /* Prevent zoom */
+    touch-action: pan-y;
   }
   
   body {
@@ -131,8 +139,17 @@
     height: 100vh;
     height: 100dvh;
     overflow: hidden;
+    overflow-x: hidden;
     margin: 0;
     padding: 0;
+    position: fixed;
+    width: 100%;
+    /* iOS specific fixes */
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior: none;
+    /* Prevent zoom */
+    touch-action: pan-y;
   }
 
   /* Hide scrollbar for html and body */
@@ -172,6 +189,33 @@
 
   .dark ::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.25);
+  }
+
+  /* iOS Safari specific fixes */
+  input,
+  textarea,
+  select {
+    font-size: 16px !important; /* Prevent zoom on focus in iOS */
+    -webkit-appearance: none;
+    appearance: none;
+    /* Prevent zoom on double tap */
+    touch-action: manipulation;
+  }
+
+  /* Prevent pull-to-refresh on iOS */
+  body {
+    overscroll-behavior-y: contain;
+  }
+
+  /* Prevent horizontal scroll globally */
+  * {
+    overflow-x: hidden;
+  }
+
+  /* Disable zoom gestures */
+  * {
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
   }
 
 }

@@ -13,9 +13,11 @@ export const metadata: Metadata = {
   viewport: {
     width: "device-width",
     initialScale: 1,
+    minimumScale: 1,
     maximumScale: 1,
     userScalable: false,
     viewportFit: "cover",
+    interactiveWidget: "resizes-content",
   },
   icons: {
     icon: [
@@ -38,6 +40,15 @@ export const metadata: Metadata = {
     capable: true,
     statusBarStyle: "black-translucent",
     title: "Dogo Social",
+    startupImage: [
+      {
+        url: "/apple-icon.png",
+        media: "(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3)",
+      },
+    ],
+  },
+  formatDetection: {
+    telephone: false,
   },
 }
 
@@ -48,6 +59,40 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="overflow-hidden">
+      <head>
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="theme-color" content="#000000" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Prevent zoom on double tap
+              let lastTouchEnd = 0;
+              document.addEventListener('touchend', function(event) {
+                const now = Date.now();
+                if (now - lastTouchEnd <= 300) {
+                  event.preventDefault();
+                }
+                lastTouchEnd = now;
+              }, { passive: false });
+              
+              // Prevent pinch zoom
+              document.addEventListener('gesturestart', function(e) {
+                e.preventDefault();
+              }, { passive: false });
+              
+              document.addEventListener('gesturechange', function(e) {
+                e.preventDefault();
+              }, { passive: false });
+              
+              document.addEventListener('gestureend', function(e) {
+                e.preventDefault();
+              }, { passive: false });
+            `,
+          }}
+        />
+      </head>
       <body className={`font-sans antialiased overflow-hidden`}>
         {children}
         <Analytics />

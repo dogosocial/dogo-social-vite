@@ -180,9 +180,16 @@ export default function ChatInterface() {
   }
 
   return (
-    <div className="flex flex-col h-screen w-full max-w-2xl mx-auto text-foreground">
+    <div 
+      className="flex flex-col h-screen w-full max-w-2xl mx-auto text-foreground" 
+      style={{ 
+        height: '100dvh',
+        overflowX: 'hidden',
+        touchAction: 'pan-y',
+      }}
+    >
       {/* Header con logo */}
-      <div className="relative flex justify-center flex-shrink-0 bg-transparent z-30">
+      <div className="relative flex justify-center flex-shrink-0 bg-transparent z-30" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         {/* GradualBlur como fondo */}
         <div className="absolute inset-0 pointer-events-none">
           <GradualBlur
@@ -207,7 +214,15 @@ export default function ChatInterface() {
       </div>
 
       {/* Messages Container - El contenedor principal de scroll */}
-      <div ref={messagesContainerRef} className="flex-1 overflow-y-auto">
+      <div 
+        ref={messagesContainerRef} 
+        className="flex-1 overflow-y-auto overscroll-contain" 
+        style={{ 
+          WebkitOverflowScrolling: 'touch',
+          overflowX: 'hidden',
+          touchAction: 'pan-y',
+        }}
+      >
         <div className="p-2 sm:p-3 md:p-6 space-y-2 sm:space-y-3 md:space-y-6 flex flex-col">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center min-h-[calc(100vh-16rem)] gap-3 sm:gap-4">
@@ -235,7 +250,10 @@ export default function ChatInterface() {
       </div>
 
       {/* Input form en la parte inferior */}
-      <div className="flex-shrink-0 p-2 sm:p-3 md:p-6 backdrop-blur-md bg-background/80 border-t border-border/30 z-30">
+      <div 
+        className="flex-shrink-0 p-2 sm:p-3 md:p-6 backdrop-blur-md bg-background/80 border-t border-border/30 z-30" 
+        style={{ paddingBottom: 'max(0.5rem, env(safe-area-inset-bottom))' }}
+      >
         <form onSubmit={sendMessage} className="flex gap-2">
           <input
             type="text"
@@ -243,7 +261,11 @@ export default function ChatInterface() {
             onChange={(e) => setInput(e.target.value)}
             placeholder="Escribe tu mensaje..."
             disabled={loading}
-            className="flex-1 px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-4 bg-background/60 backdrop-blur-sm border border-border/50 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent disabled:opacity-50 text-xs sm:text-sm md:text-base transition-all min-h-[44px] touch-manipulation"
+            style={{ 
+              fontSize: '16px',
+              touchAction: 'manipulation',
+            }}
+            className="flex-1 px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-4 bg-background/60 backdrop-blur-sm border border-border/50 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent disabled:opacity-50 transition-all min-h-[44px]"
           />
           <button
             type="submit"
