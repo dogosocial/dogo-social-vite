@@ -180,16 +180,26 @@ export default function ChatInterface() {
 
   return (
     <div 
-      className="relative flex flex-col h-screen w-full max-w-2xl mx-auto text-foreground" 
+      className="relative flex flex-col w-full max-w-2xl mx-auto text-foreground" 
       style={{ 
         height: '100dvh',
         overflow: 'hidden',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        margin: '0 auto',
       }}
     >
       {/* Header con logo - FIJO */}
       <div 
         className="relative flex justify-center flex-shrink-0 w-full bg-background/95 backdrop-blur-md z-40 border-b border-border/30" 
-        style={{ paddingTop: 'env(safe-area-inset-top)' }}
+        style={{ 
+          paddingTop: 'max(0.5rem, env(safe-area-inset-top))',
+          position: 'sticky',
+          top: 0,
+        }}
       >
         {/* GradualBlur como fondo */}
         <div className="absolute inset-0 pointer-events-none opacity-50">
@@ -251,7 +261,11 @@ export default function ChatInterface() {
       {/* Input form en la parte inferior - FIJO */}
       <div 
         className="flex-shrink-0 w-full px-3 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 backdrop-blur-md bg-background/95 border-t border-border/30 z-40" 
-        style={{ paddingBottom: 'calc(0.75rem + env(safe-area-inset-bottom))' }}
+        style={{ 
+          paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))',
+          position: 'sticky',
+          bottom: 0,
+        }}
       >
         <form onSubmit={sendMessage} className="flex gap-2">
           <input
