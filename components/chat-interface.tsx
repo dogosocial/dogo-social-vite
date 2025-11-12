@@ -35,17 +35,27 @@ export default function ChatInterface() {
   // Ajustar la altura del contenedor para manejar teclados móviles/barras
   useEffect(() => {
     const setViewportHeight = () => {
-      const height = window.visualViewport?.height ?? window.innerHeight
-      document.documentElement.style.setProperty("--viewport-height", `${height}px`)
+      const viewport = window.visualViewport
+
+      if (viewport) {
+        // offsetTop compensa el movimiento del viewport cuando aparece el teclado
+        const dynamicHeight = viewport.height + viewport.offsetTop
+        document.documentElement.style.setProperty("--viewport-height", `${dynamicHeight}px`)
+      } else {
+        document.documentElement.style.setProperty("--viewport-height", `${window.innerHeight}px`)
+      }
     }
 
     setViewportHeight()
 
-    window.visualViewport?.addEventListener("resize", setViewportHeight)
+    const viewport = window.visualViewport
+    viewport?.addEventListener("resize", setViewportHeight)
+    viewport?.addEventListener("scroll", setViewportHeight)
     window.addEventListener("resize", setViewportHeight)
 
     return () => {
-      window.visualViewport?.removeEventListener("resize", setViewportHeight)
+      viewport?.removeEventListener("resize", setViewportHeight)
+      viewport?.removeEventListener("scroll", setViewportHeight)
       window.removeEventListener("resize", setViewportHeight)
     }
   }, [])
