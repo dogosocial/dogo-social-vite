@@ -199,7 +199,7 @@ export default function ChatInterface() {
 
   return (
     <div 
-      className="flex flex-col w-full max-w-2xl mx-auto text-foreground"
+      className="w-full max-w-2xl mx-auto text-foreground"
       style={{
         position: 'fixed',
         top: 0,
@@ -207,9 +207,10 @@ export default function ChatInterface() {
         right: 0,
         bottom: 0,
         height: 'var(--viewport-height, 100dvh)',
-        maxHeight: 'var(--viewport-height, 100dvh)',
         margin: 'auto',
         overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
       }}
     >
       {/* Header con logo - FIJO */}
