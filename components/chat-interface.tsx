@@ -22,7 +22,9 @@ export default function ChatInterface() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -31,6 +33,36 @@ export default function ChatInterface() {
   useEffect(() => {
     scrollToBottom()
   }, [messages])
+
+  // Detectar cuando el teclado se abre/cierra
+  useEffect(() => {
+    const handleResize = () => {
+      // En móviles, cuando el teclado se abre, la altura del viewport disminuye
+      const viewportHeight = window.visualViewport?.height || window.innerHeight
+      const windowHeight = window.innerHeight
+      
+      // Si la diferencia es significativa, el teclado está abierto
+      const keyboardVisible = windowHeight - viewportHeight > 100
+      setIsKeyboardOpen(keyboardVisible)
+    }
+
+    // Escuchar cambios en el visual viewport (mejor para detectar teclado)
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', handleResize)
+      window.visualViewport.addEventListener('scroll', handleResize)
+    } else {
+      window.addEventListener('resize', handleResize)
+    }
+
+    return () => {
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', handleResize)
+        window.visualViewport.removeEventListener('scroll', handleResize)
+      } else {
+        window.removeEventListener('resize', handleResize)
+      }
+    }
+  }, [])
 
   const pollForResponse = async (messageId: string, maxAttempts = 30) => {
     let attempts = 0
@@ -246,13 +278,22 @@ export default function ChatInterface() {
 
       {/* Input form en la parte inferior - FIJO */}
       <div 
-        className="flex-shrink-0 w-full px-3 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 backdrop-blur-md bg-background/95 border-t border-border/30 z-40" 
+        className="flex-shrink-0 w-full px-3 py-3 sm:px-4 sm:py-3 md:px-6 md:py-4 backdrop-blur-md bg-background/95 border-t border-border/30" 
         style={{ 
           paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))',
+          position: isKeyboardOpen ? 'fixed' : 'relative',
+          bottom: isKeyboardOpen ? '0' : 'auto',
+          left: isKeyboardOpen ? '0' : 'auto',
+          right: isKeyboardOpen ? '0' : 'auto',
+          zIndex: 50,
+          maxWidth: isKeyboardOpen ? '672px' : '100%',
+          marginLeft: isKeyboardOpen ? 'auto' : '0',
+          marginRight: isKeyboardOpen ? 'auto' : '0',
         }}
       >
         <form onSubmit={sendMessage} className="flex gap-2">
           <input
+            ref={inputRef}
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
