@@ -65,7 +65,7 @@ export default function ChatInterface() {
           }
         }
       } catch (error) {
-        console.error("[v0] Error en polling:", error)
+        console.error("Error en polling:", error)
       }
 
       if (attempts >= maxAttempts) {

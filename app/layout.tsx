@@ -10,7 +10,6 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "Dogo Social - Chat con IA",
   description: "Asistente inteligente para mascotas. Obtén consejos sobre la salud y cuidado de tu perro o gato.",
-  generator: "v0.app",
   icons: {
     icon: [
       {
